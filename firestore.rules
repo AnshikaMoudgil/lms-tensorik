@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Function to check if a user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Function to check if the user is accessing their own data
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // --- COURSES ---
+    // Anyone logged in can view the courses list
+    // Writing/deleting courses should only be done by an Admin (restricted here)
+    match /courses/{courseId} {
+      allow read: if isAuthenticated();
+      
+      // In production, you would check for an admin claim:
+      // allow write: if request.auth.token.admin == true;
+      allow write: if false; 
+    }
+
+    // --- LESSONS ---
+    // Anyone logged in can view the lessons
+    match /lessons/{lessonId} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // --- USERS ---
+    // Users can only read and write their own profile data
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+  }
+}
