@@ -7,6 +7,7 @@ import '../../../../core/theme/theme_provider.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../../course/presentation/providers/course_providers.dart';
 import '../../../lesson/presentation/providers/lesson_providers.dart';
+import '../../../../core/services/notification_providers.dart';
 
 class ProfileView extends ConsumerWidget {
   const ProfileView({super.key});
@@ -19,6 +20,7 @@ class ProfileView extends ConsumerWidget {
     final totalCourses = enrollments.values.where((v) => v == true).length;
     final completedLessons = completions.values.where((v) => v == true).length;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final notificationsEnabled = ref.watch(notificationsEnabledProvider);
 
     return authState.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -34,7 +36,7 @@ class ProfileView extends ConsumerWidget {
           backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
           body: CustomScrollView(
             slivers: [
-              // ── PROFILE HEADER ───────────────────────────────────────────
+              // ── PROFILE HEADER ────────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -51,7 +53,7 @@ class ProfileView extends ConsumerWidget {
                   child: SafeArea(
                     bottom: false,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 36),
+                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
                       child: Column(
                         children: [
                           // App bar row
@@ -166,45 +168,44 @@ class ProfileView extends ConsumerWidget {
                 ),
               ),
 
-              // ── STATS CARDS ──────────────────────────────────────────────
+              // ── STAT CARDS ────────────────────────────────────────────────
               SliverToBoxAdapter(
-                child: Transform.translate(
-                  offset: const Offset(0, -28),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _StatCard(
-                            label: 'Enrolled',
-                            value: totalCourses.toString(),
-                            icon: Icons.school_rounded,
-                            color: AppColors.primary,
-                          ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _StatCard(
+                          label: 'Enrolled',
+                          value: totalCourses.toString(),
+                          icon: Icons.school_rounded,
+                          color: AppColors.primary,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _StatCard(
-                            label: 'Completed',
-                            value: completedLessons.toString(),
-                            icon: Icons.check_circle_rounded,
-                            color: AppColors.success,
-                          ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _StatCard(
+                          label: 'Completed',
+                          value: completedLessons.toString(),
+                          icon: Icons.check_circle_rounded,
+                          color: AppColors.success,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _StatCard(
-                            label: 'Certificates',
-                            value: '0',
-                            icon: Icons.card_membership_rounded,
-                            color: AppColors.warning,
-                          ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _StatCard(
+                          label: 'Certificates',
+                          value: '0',
+                          icon: Icons.card_membership_rounded,
+                          color: AppColors.warning,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
               // ── MENU SECTION ─────────────────────────────────────────────
               SliverToBoxAdapter(
@@ -254,7 +255,12 @@ class ProfileView extends ConsumerWidget {
                           icon: Icons.notifications_rounded,
                           color: const Color(0xFFFF7043),
                           label: 'Notifications',
-                          onTap: () {},
+                          subtitle: notificationsEnabled ? 'On' : 'Off',
+                          trailing: Switch.adaptive(
+                            value: notificationsEnabled,
+                            onChanged: (val) => ref.read(notificationsEnabledProvider.notifier).toggle(val),
+                            activeTrackColor: AppColors.primary,
+                          ),
                         ),
                         _buildDivider(),
                         _MenuTile(

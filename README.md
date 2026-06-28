@@ -1,77 +1,71 @@
-# LearnFlow - LMS Learning App
+# LMS Learning App
 
-LearnFlow is a modern, interactive Learning Management System (LMS) built with Flutter and Firebase. It features a clean, responsive UI with a premium dark/light mode experience, AI-generated quizzes, interactive lessons, and real-time user progress tracking.
+A modern, highly interactive Learning Management System (LMS) built with Flutter and Firebase. 
 
-## 🚀 Project Setup Instructions
+This application provides a rich, responsive interface for users to browse courses, watch lessons, take quizzes, and track their progress over time. The app utilizes a clean architecture powered by Riverpod for state management.
+
+## 🌟 Key Features
+
+* **Authentication:** Secure Email/Password & Google Sign-In using Firebase Auth.
+* **Dashboard:** Personalized greetings, progress overviews, and recent courses.
+* **Course Exploration:** Search and filter through available courses with beautiful UI cards.
+* **Interactive Lessons:** Video lessons with descriptions and resources.
+* **Quizzes:** Built-in quiz system to test knowledge after completing modules.
+* **User Profile:** Real-time stats on enrolled courses, completed lessons, and certificates.
+* **Notifications:** Local & Push notifications for daily learning reminders, lesson alerts, and new course availability (powered by `flutter_local_notifications` & Firebase Cloud Messaging).
+* **Dark/Light Mode:** Full theming support that adapts to system preferences or user choice.
+
+## 🛠 Tech Stack
+
+* **Framework:** [Flutter](https://flutter.dev/)
+* **State Management:** [Riverpod](https://riverpod.dev/) (`hooks_riverpod`)
+* **Backend / Database:** [Firebase](https://firebase.google.com/) (Auth, Firestore)
+* **Routing:** `go_router`
+* **Local Storage:** `shared_preferences`
+* **Animations:** `flutter_animate`, `lottie`
+* **Network Images:** `cached_network_image`
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- **Flutter SDK**: ^3.24.0 (Ensure you are on the stable channel)
-- **Dart SDK**: ^3.5.0
-- **Android Studio** (for Android deployment)
-- **Firebase Project** (Configure a Firebase project and add `google-services.json` for Android)
+
+* Flutter SDK (v3.11.1 or higher)
+* Dart SDK
+* An active Firebase Project configured for Android, iOS, and Web.
 
 ### Installation
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/AnshikaMoudgil/lms-tensorik.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
    cd lms-tensorik
    ```
-2. Install dependencies:
+
+3. Install dependencies:
    ```bash
    flutter pub get
    ```
-3. Run Code Generation (for Freezed & Riverpod models):
-   ```bash
-   dart run build_runner build -d
-   ```
+
 4. Run the app:
    ```bash
    flutter run
    ```
 
-## 🛠 Technologies Used
-- **Framework**: Flutter (Dart)
-- **Backend & Authentication**: Firebase (Auth, Firestore)
-- **State Management**: Riverpod (`hooks_riverpod`, `flutter_riverpod`)
-- **Navigation**: GoRouter
-- **Architecture**: Clean Architecture + MVVM
+*(Note: For Google Sign-In to work on Android, you must register your SHA-1 key in your Firebase Console. For Web, ensure you provide the correct Client ID.)*
 
-## 📂 Folder Structure Overview
-The project follows a **Feature-First Clean Architecture** for scalability and maintainability:
+## 📱 Build for Android (APK)
 
-```text
-lib/
-├── core/                   # Shared utilities, theme, constants, and global widgets
-│   ├── constants/          # App sizes, colors, text styles
-│   ├── theme/              # Light and Dark theme configurations
-│   ├── utils/              # Helper functions, router config
-│   └── widgets/            # Reusable UI components (buttons, text fields)
-├── features/               # Independent feature modules
-│   ├── auth/               # Login, Sign up, Splash, User Auth logic
-│   ├── course/             # Course browsing, details, enrollment
-│   ├── dashboard/          # Home screen, category grid, bottom navigation
-│   ├── lesson/             # Video lessons, text content, progress tracking
-│   ├── profile/            # User profile, statistics, settings
-│   └── quiz/               # AI-generated quizzes, final assessment, certificates
-└── main.dart               # App entry point & Firebase initialization
+To build a release APK for Android devices:
+
+```bash
+flutter build apk --release
 ```
-Each feature inside `lib/features/` is further divided into:
-- `presentation/`: Views, ViewModels, and Providers.
-- `domain/`: Data models and repositories interfaces.
-- `data/`: Repositories implementations and network services.
+The output APK will be located in `build/app/outputs/flutter-apk/app-release.apk`.
 
-## ⚠️ Assumptions or Limitations
-- **Android-Only Deployment**: Platform folders for iOS, Web, macOS, Linux, and Windows have been intentionally removed to restrict the build to Android.
-- **AI Quizzes**: The AI Quiz generation depends on an external AI service which requires an internet connection and a valid API configuration.
-- **Video Playback**: The current video player implementation assumes valid network URLs for video streaming.
-- **Authentication**: Users must register/login to track progress and enroll in courses. Guest mode is not fully persistent.
+---
 
-## 📦 Third-Party Libraries Used
-- `flutter_riverpod` & `hooks_riverpod`: Reactive caching and state management.
-- `firebase_core`, `firebase_auth`, `cloud_firestore`: Backend database and authentication.
-- `go_router`: Declarative routing and deep linking.
-- `freezed_annotation` & `json_annotation`: Immutable data models and JSON serialization.
-- `cached_network_image`: Efficient image caching.
-- `flutter_animate` & `shimmer`: Beautiful UI animations and loading states.
-- `shared_preferences`: Local storage for theme and simple preferences.
-- `uuid`: Unique identifier generation.
+*Designed and built with ❤️ using Flutter.*

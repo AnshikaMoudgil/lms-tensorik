@@ -55,6 +55,24 @@ class _SignupViewState extends ConsumerState<SignupView> {
     }
   }
 
+  void _signInWithGoogle() {
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithGoogle()
+        .then((_) {
+      if (mounted) context.go('/dashboard');
+    }).catchError((e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google Sign In Failed: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
@@ -122,6 +140,29 @@ class _SignupViewState extends ConsumerState<SignupView> {
                             child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                           )
                         : const Text('Sign Up'),
+                  ),
+                  const SizedBox(height: AppSizes.p16),
+                  OutlinedButton.icon(
+                    onPressed: isLoading ? null : _signInWithGoogle,
+                    icon: Image.asset(
+                      'assets/images/google_logo.png',
+                      height: 24,
+                    ),
+                    label: const Text(
+                      'Continue with Google',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      side: BorderSide(color: Colors.grey.shade300),
+                      backgroundColor: Colors.white,
+                    ),
                   ),
                 ],
               ),

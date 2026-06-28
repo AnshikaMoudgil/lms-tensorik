@@ -63,6 +63,24 @@ class _LoginViewState extends ConsumerState<LoginView>
     }
   }
 
+  void _signInWithGoogle() {
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithGoogle()
+        .catchError((e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google Sign In Failed: $e'),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
@@ -285,6 +303,31 @@ class _LoginViewState extends ConsumerState<LoginView>
                                     ),
                                   ),
                                 ],
+                              ),
+                              const SizedBox(height: 16),
+                              
+                              // Google Sign In
+                              OutlinedButton.icon(
+                                onPressed: isLoading ? null : _signInWithGoogle,
+                                icon: Image.asset(
+                                  'assets/images/google_logo.png',
+                                  height: 24,
+                                ),
+                                label: const Text(
+                                  'Continue with Google',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
+                                  side: BorderSide(color: Colors.grey.shade300),
+                                  backgroundColor: Colors.white,
+                                ),
                               ),
                             ],
                           ),

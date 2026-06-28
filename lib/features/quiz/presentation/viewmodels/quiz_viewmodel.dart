@@ -7,6 +7,7 @@ import '../../domain/models/quiz_model.dart';
 import '../../data/services/ai_quiz_service.dart';
 import '../../data/repositories/quiz_repository.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../../../core/services/notification_providers.dart';
 import '../providers/quiz_providers.dart';
 
 part 'quiz_viewmodel.freezed.dart';
@@ -59,6 +60,11 @@ class QuizViewModel extends Notifier<QuizState> {
         isLoading: false,
         questions: questions,
       );
+      
+      // Trigger Quiz Available notification if enabled
+      if (ref.read(notificationsEnabledProvider)) {
+        ref.read(notificationServiceProvider).showQuizAvailableNotification('Lesson Quiz');
+      }
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
@@ -75,6 +81,10 @@ class QuizViewModel extends Notifier<QuizState> {
         questions: questions,
       );
       _startTimer();
+
+      if (ref.read(notificationsEnabledProvider)) {
+        ref.read(notificationServiceProvider).showQuizAvailableNotification('Final Assessment');
+      }
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

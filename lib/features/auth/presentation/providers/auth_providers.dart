@@ -63,6 +63,17 @@ class AuthController extends AsyncNotifier<UserModel?> {
     }
   }
 
+  Future<void> signInWithGoogle() async {
+    state = const AsyncValue.loading();
+    try {
+      final user = await _authRepository.signInWithGoogle();
+      state = AsyncValue.data(user);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+
   Future<void> resetPassword(String email) async {
     await _authRepository.sendPasswordResetEmail(email);
   }

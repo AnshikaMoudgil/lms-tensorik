@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../domain/models/user_model.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -100,6 +102,60 @@ class AuthRepository {
 
   Future<void> logout() async {
     await _firebaseAuth.signOut();
+    await GoogleSignIn.instance.signOut();
+  }
+
+  Future<UserModel> signInWithGoogle() async {
+    try {
+      if (kIsWeb) {
+        // Firebase Auth natively handles Google Sign-In on the Web via popup
+        final authProvider = firebase_auth.GoogleAuthProvider();
+        final userCredential = await _firebaseAuth.signInWithPopup(authProvider);
+        final user = userCredential.user;
+        if (user == null) throw Exception('Google sign in failed');
+
+        var userData = await getUserData(user.uid);
+        if (userData == null) {
+          userData = UserModel(
+            uid: user.uid,
+            name: user.displayName ?? 'Google User',
+            email: user.email ?? '',
+            createdAt: DateTime.now(),
+          );
+          await _firestore.collection('users').doc(user.uid).set(userData.toJson());
+        }
+        return userData;
+      } else {
+        // Use google_sign_in package for native platforms (Android/iOS)
+        final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
+        if (googleUser == null) throw Exception('Google sign in was cancelled');
+
+        final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+        final firebase_auth.AuthCredential credential = firebase_auth.GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+        );
+
+        final userCredential = await _firebaseAuth.signInWithCredential(credential);
+        final user = userCredential.user;
+        if (user == null) throw Exception('Google sign in failed');
+
+        var userData = await getUserData(user.uid);
+        if (userData == null) {
+          userData = UserModel(
+            uid: user.uid,
+            name: user.displayName ?? 'Google User',
+            email: user.email ?? '',
+            createdAt: DateTime.now(),
+          );
+          await _firestore.collection('users').doc(user.uid).set(userData.toJson());
+        }
+        return userData;
+      }
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw Exception(e.message ?? 'Google sign in failed');
+    } catch (e) {
+      throw Exception('An unexpected error occurred: $e');
+    }
   }
 
   Future<void> sendPasswordResetEmail(String email) async {
