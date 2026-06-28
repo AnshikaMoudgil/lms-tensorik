@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "888495751413",
+    "project_id": "lms-tensorik",
+    "storage_bucket": "lms-tensorik.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888495751413:android:bfe3d927f5ceb682d905bc",
+        "android_client_info": {
+          "package_name": "LMS.TENSORIK"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888495751413-6hpfpsp2fenjgbol2jqpfgi2tanc2for.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "LMS.TENSORIK",
+            "certificate_hash": "42a3e7ad43c50feb7b0adf38179b6ed19e98dcc0"
+          }
+        },
+        {
+          "client_id": "888495751413-41cgkt8c4kkcmaoafqnmpm8efktco8rl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsj72DlWoKqM9SkVmuNTCHvpUBzw6EUZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888495751413-41cgkt8c4kkcmaoafqnmpm8efktco8rl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

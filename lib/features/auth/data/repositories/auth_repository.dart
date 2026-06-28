@@ -127,6 +127,8 @@ class AuthRepository {
         return userData;
       } else {
         // Use google_sign_in package for native platforms (Android/iOS)
+        await GoogleSignIn.instance.initialize();
+        
         final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
         if (googleUser == null) throw Exception('Google sign in was cancelled');
 
